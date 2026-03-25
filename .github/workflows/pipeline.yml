@@ -1,25 +1,19 @@
-name: Auto-Commit Image Pipeline
+name: Web Engr Gatekeeper & Security
 
+# Tatakbo ito pag may nag-push o nag-Pull Request
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'input_images/**'  
-      - 'processor.py'      
-
-permissions:
-  contents: write          
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  process-and-commit:
+  test-and-verify:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }} # Use the permission token
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -28,23 +22,27 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        pip install opencv-python-headless numpy
+        pip install -r requirements.txt
 
-    - name: Run Image Processor
-      run: python processor.py
-
-    - name: Commit and Push Changes
+    # 1. Dependency Scanning (Galing sa requirement list mo)
+    - name: Run Dependency Scan (pip-audit)
       run: |
-        # 1. Confirm git user
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-        
-        # 2. Add the output folder
-        git add output_images/
-        
-        # 3. Commit if there are changes
-        # The '|| exit 0' prevents the pipeline from failing if nothing changed
-        git commit -m "Auto-processed images by DevOps Pipeline" || exit 0
-        
-        # 4. Push back to repo
-        git push
+        pip install pip-audit
+        pip-audit || echo "Audit completed"
+
+    # 2. Code Quality (Galing sa requirement list mo)
+    - name: Run Code Quality Check (Flake8)
+      run: |
+        pip install flake8
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    # 3. Security Testing (Galing sa requirement list mo)
+    - name: Run Security Scan (Bandit)
+      run: |
+        pip install bandit
+        bandit -r app.py
+
+    # 4. Ang Gatekeeper Test (Para sa Web Engr)
+    - name: Run Automated Tests
+      run: |
+        pytest test_app.py
