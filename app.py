@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 # IMPROVEMENT 1: Gawing "Wide" ang layout para mas malaki ang pictures
-st.set_page_config(page_title="Image Processor", layout="wide")
+st.set_page_config(page_title="Image Processor")
 
 st.title("DevOps x WebEngr: Image Processor")
 st.write("Upload an image to apply custom automated filters.")
