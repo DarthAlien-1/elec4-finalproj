@@ -1,6 +1,5 @@
 name: Web Engr Gatekeeper & Security
 
-# Tatakbo ito pag may nag-push o nag-Pull Request
 on:
   push:
     branches: [ "main" ]
@@ -24,30 +23,30 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    # 1. Dependency Scanning (Galing sa requirement list mo)
+    # 1. Dependency Scanning 
     - name: Run Dependency Scan (pip-audit)
       run: |
         pip install pip-audit
         pip-audit || echo "Audit completed"
 
-    # 2. Code Quality (Galing sa requirement list mo)
+    # 2. Code Quality
     - name: Run Code Quality Check (Flake8)
       run: |
         pip install flake8
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    # 3. Security Testing (Galing sa requirement list mo)
+    # 3. Security Testing 
     - name: Run Security Scan (Bandit)
       run: |
         pip install bandit
         bandit -r app.py
 
-    # 4. Ang Gatekeeper Test (Para sa Web Engr)
+    # 4. Ang Gatekeeper Test 
     - name: Run Automated Tests
       run: |
         pytest test_app.py
 
-    # 5. Container/Filesystem Scanning (Para sa requirement ni Sir)
+    # 5. Container/Filesystem Scanning 
     - name: Run Container/Filesystem Scan (Trivy)
       uses: aquasecurity/trivy-action@master
       with:
