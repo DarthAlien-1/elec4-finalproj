@@ -4,7 +4,7 @@ import numpy as np
 
 st.set_page_config(page_title="Image Processor")
 
-st.title("DevOps x WebEngr: Image Processor")
+st.title("Elective 4 Final Project - Image Processor")
 st.write("Upload an image to apply custom automated filters.")
 
 st.sidebar.header("⚙️ Filter Settings")
