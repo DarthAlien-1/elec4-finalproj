@@ -46,3 +46,11 @@ jobs:
     - name: Run Automated Tests
       run: |
         pytest test_app.py
+
+    # 5. Container/Filesystem Scanning (Para sa requirement ni Sir)
+    - name: Run Container/Filesystem Scan (Trivy)
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        format: 'table'
+        severity: 'CRITICAL,HIGH'
