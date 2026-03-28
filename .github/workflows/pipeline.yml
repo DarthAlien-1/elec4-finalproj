@@ -41,7 +41,7 @@ jobs:
         pip install bandit
         bandit -r app.py
 
-    # 4. Ang Gatekeeper Test 
+    # 4. Gatekeeper Test 
     - name: Run Automated Tests
       run: |
         pytest test_app.py
